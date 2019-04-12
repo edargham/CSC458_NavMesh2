@@ -18,15 +18,23 @@ public class EnemyController : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(Mathf.Sqrt((player.transform.position-transform.position).sqrMagnitude)<radius)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, player.transform.position - this.transform.position, out hit, Mathf.Infinity))
         {
-            agent.SetDestination(player.transform.position);
-
-            if(Mathf.Sqrt((player.transform.position - transform.position).sqrMagnitude) < smallRadius)
+            if(hit.collider.tag=="Player")
             {
-                transform.LookAt(player.transform);
+                if (Mathf.Sqrt((player.transform.position - transform.position).sqrMagnitude) < radius)
+                {
+                    agent.SetDestination(player.transform.position);
+
+                    if (Mathf.Sqrt((player.transform.position - transform.position).sqrMagnitude) < smallRadius)
+                    {
+                        transform.LookAt(player.transform);
+                    }
+                }
             }
         }
+        Debug.DrawRay(transform.position, player.transform.position - this.transform.position);
         animator.SetFloat("Speed", Mathf.Sqrt((agent.velocity.sqrMagnitude)));
     }
 
